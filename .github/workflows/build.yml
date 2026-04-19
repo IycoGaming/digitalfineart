@@ -27,15 +27,20 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install deps
-        run: npm install
+      # ✅ Install ONLY capacitor (no full npm project needed)
+      - name: Install Capacitor CLI
+        run: npm install -g @capacitor/cli
 
-      - name: Create www folder and copy app
+      # ✅ Prepare web files
+      - name: Prepare www
         run: |
           mkdir -p www
           cp index.html www/index.html
-          echo "www folder contents:"
-          ls -la www/
+
+      # ✅ Initialize capacitor (IMPORTANT)
+      - name: Init Capacitor
+        run: |
+          npx cap init "Digital Sanctuary" "com.sanctuary.app" --web-dir=www
 
       - name: Add Android platform
         run: npx cap add android
@@ -47,7 +52,7 @@ jobs:
         run: chmod +x android/gradlew
 
       - name: Build Debug APK
-        run: cd android && ./gradlew assembleDebug --no-daemon --stacktrace
+        run: cd android && ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
