@@ -27,24 +27,32 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # ✅ Install Capacitor CLI
-      - name: Install Capacitor
-        run: npm install -g @capacitor/cli
+      # ✅ CREATE NODE PROJECT (CRITICAL FIX)
+      - name: Create package.json
+        run: |
+          npm init -y
 
-      # ✅ IMPORTANT: Convert your file to index.html
-      - name: Prepare app files
+      # ✅ Install Capacitor properly
+      - name: Install Capacitor
+        run: |
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+
+      # ✅ Prepare your app
+      - name: Prepare app
         run: |
           mkdir www
           cp newcodefile.html www/index.html
 
-      # ✅ Init Capacitor
+      # ✅ Init capacitor
       - name: Init Capacitor
         run: |
           npx cap init "Digital Sanctuary" "com.sanctuary.app" --web-dir=www
 
+      # ✅ Add Android
       - name: Add Android
         run: npx cap add android
 
+      # ✅ Sync
       - name: Sync
         run: npx cap sync
 
